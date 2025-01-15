@@ -38,11 +38,8 @@ class AudioTranscriptionApp(App):
 
     async def on_mount(self) -> None:
         """Run tasks when the app is mounted."""
-        status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
-        activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
-
-        status_widget.update_status("⚪ Please select an audio device to proceed")
-        activity_widget.update_activity("Idle...")
+        self.update_status("⚪ Please select an audio device to proceed")
+        self.update_activity("Idle...")
 
     @on(Select.Changed, "#audio-device-select")
     def on_device_selected(self, event: Select.Changed) -> None:
@@ -58,18 +55,14 @@ class AudioTranscriptionApp(App):
         select_widget.disabled = True
 
         # Update status
-        status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
-        status_widget.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
+        self.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
 
     async def on_key(self, event: TextualKeyEvent) -> None:
         await self.handle_key_press(event.key)
 
     async def handle_key_press(self, key: str) -> None:
-        status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
-        activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
-
         if not self.device_selected and key.lower() != "q":
-            status_widget.update_status("⚪ Please select an audio device first.")
+            self.update_status("⚪ Please select an audio device first.")
             return
 
         if key.lower() == "q":
@@ -79,35 +72,59 @@ class AudioTranscriptionApp(App):
             self.is_recording = not self.is_recording
             if self.is_recording:
                 self.frames = []
-                status_widget.update_status("🔴 Recording... (Press 'K' to stop)")
-                activity_widget.update_activity("Recording")
+                self.update_status("🔴 Recording... (Press 'K' to stop)")
+                self.update_activity("Recording")
 
                 # Start capturing audio in the background
                 # self.run_worker(self.capture_audio)
             else:
-                status_widget.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
-                activity_widget.update_activity("Processing audio...")
+                self.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
+                self.update_activity("Processing audio...")
                 await self.process_audio()
 
     async def process_audio(self) -> None:
-        activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
-        results_widget = self.query_one("#results-log", ResultsBox)
-
         if not self.frames:
-            activity_widget.update_activity("No audio recorded to process.")
+            self.update_activity("No audio recorded to process.")
             return
 
-        activity_widget.update_activity("Preparing audio for transcription...")
+        self.update_activity("Preparing audio for transcription...")
         try:
+            results_widget = self.query_one("#results-log", ResultsBox)
             results_widget.clear()
             audio_file_path = self.audio_handler.export_frames_to_flac(self.frames)
-            activity_widget.update_activity("Processing transcription...")
+            self.update_activity("Processing transcription...")
             result = transcribe_audio(audio_file_path)
             results_widget.write_result(result)
-            activity_widget.update_activity("Done")
+            self.update_activity("Done")
         except Exception as e:
-            activity_widget.update_activity(f"Error: {str(e)}")
+            self.update_activity(f"Error: {str(e)}")
 
+    async def capture_audio(self) -> None:
+        """Capture audio data while recording is active."""
+        self.update_activity("Recording... Press 'K' to stop.")
+
+        try:
+            self.audio_handler.open_stream(device_index=self.device_index)
+
+            while self.is_recording:
+                try:
+                    # Read a chunk of audio and append it to frames
+                    data = self.audio_handler.read_chunk()
+                    self.frames.append(data)
+
+                    # Update recording progress
+                    self.update_status(f"🔴 Recording... {len(self.frames)} chunks captured.")
+                    await self.sleep(0.1)  # Yield to the event loop to keep the UI responsive
+                except Exception as chunk_error:
+                    self.update_activity(f"Error capturing audio chunk: {str(chunk_error)}")
+                    break
+
+        except Exception as e:
+            self.update_activity(f"Error: {str(e)}")
+            self.update_status("⚪ Recording failed. Try again.")
+        finally:
+            self.audio_handler.close_stream()
+    
     # async def capture_audio(self) -> None:
     #     """Capture audio data while recording is active."""
     #     status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
@@ -136,6 +153,17 @@ class AudioTranscriptionApp(App):
     #         status_widget.update_status("⚪ Recording failed. Try again.")
     #     finally:
     #         self.audio_handler.close_stream()
+
+    def update_status(self, message: str) -> None:
+        """Helper to update the status widget."""
+        status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
+        status_widget.update_status(message)
+
+    def update_activity(self, message: str) -> None:
+        """Helper to update the activity widget."""
+        activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
+        activity_widget.update_activity(message)
+
 
 if __name__ == "__main__":
     app = AudioTranscriptionApp()
