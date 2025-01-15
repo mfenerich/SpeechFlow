@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+pyaudio = "^0.2.14"
+pydub = "^0.25.1"
+openai = "^1.59.7"
 
 
 [build-system]
