@@ -10,6 +10,7 @@ python = "^3.11"
 pyaudio = "^0.2.14"
 pydub = "^0.25.1"
 openai = "^1.59.7"
+textual = "^1.0.0"
 
 
 [build-system]
