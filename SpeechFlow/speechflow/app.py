@@ -76,7 +76,7 @@ class AudioTranscriptionApp(App):
                 self.update_activity("Recording")
 
                 # Start capturing audio in the background
-                # self.run_worker(self.capture_audio)
+                self.run_worker(self.capture_audio)
             else:
                 self.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
                 self.update_activity("Processing audio...")
@@ -105,54 +105,30 @@ class AudioTranscriptionApp(App):
 
         try:
             self.audio_handler.open_stream(device_index=self.device_index)
+            self.frames = []  # Reset frames for a fresh recording
 
             while self.is_recording:
                 try:
-                    # Read a chunk of audio and append it to frames
+                    # Read a chunk of audio and append to frames
                     data = self.audio_handler.read_chunk()
                     self.frames.append(data)
 
-                    # Update recording progress
+                    # Provide feedback on recording progress
                     self.update_status(f"🔴 Recording... {len(self.frames)} chunks captured.")
                     await self.sleep(0.1)  # Yield to the event loop to keep the UI responsive
                 except Exception as chunk_error:
+                    # Handle errors while capturing audio
                     self.update_activity(f"Error capturing audio chunk: {str(chunk_error)}")
                     break
-
         except Exception as e:
+            # Handle errors when opening the audio stream
             self.update_activity(f"Error: {str(e)}")
             self.update_status("⚪ Recording failed. Try again.")
         finally:
+            # Ensure the audio stream is properly closed
             self.audio_handler.close_stream()
-    
-    # async def capture_audio(self) -> None:
-    #     """Capture audio data while recording is active."""
-    #     status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
-    #     activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
+            self.update_activity("Idle...")
 
-    #     try:
-    #         self.audio_handler.open_stream(device_index=self.device_index)
-    #         activity_widget.update_activity("Recording... Press 'K' to stop.")
-
-    #         while self.is_recording:
-    #             try:
-    #                 # Read a chunk of audio and append it to frames
-    #                 data = self.audio_handler.read_chunk()
-    #                 self.frames.append(data)
-
-    #                 # Optional: Update status widget with recording progress (e.g., duration or size)
-    #                 status_widget.update_status(f"🔴 Recording... {len(self.frames)} chunks captured.")
-    #                 await self.sleep(0.1)  # Yield to the event loop to keep the UI responsive
-    #             except Exception as chunk_error:
-    #                 # Handle individual chunk reading errors without interrupting recording
-    #                 activity_widget.update_activity(f"Error capturing audio chunk: {str(chunk_error)}")
-    #                 break
-
-    #     except Exception as e:
-    #         activity_widget.update_activity(f"Error: {str(e)}")
-    #         status_widget.update_status("⚪ Recording failed. Try again.")
-    #     finally:
-    #         self.audio_handler.close_stream()
 
     def update_status(self, message: str) -> None:
         """Helper to update the status widget."""

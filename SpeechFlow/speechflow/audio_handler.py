@@ -1,7 +1,6 @@
 import pyaudio
-import tempfile
 from pydub import AudioSegment
-from textual import log
+import os
 
 
 class AudioHandler:
@@ -67,20 +66,39 @@ class AudioHandler:
             self.stream.close()
             self.stream = None
 
-    def export_frames_to_flac(self, frames: list[bytes]) -> str:
+    def export_frames_to_flac(self, frames: list[bytes], output_dir: str = "./") -> str:
         """
         Combine audio frames into a pydub AudioSegment and
-        export to a temporary FLAC file. Returns the file path.
+        export to a FLAC file in the specified directory. Returns the file path.
         """
-        audio_data = b"".join(frames)
-        audio_segment = AudioSegment(
-            data=audio_data,
-            sample_width=self.audio.get_sample_size(self.FORMAT),
-            frame_rate=self.RATE,
-            channels=self.CHANNELS,
-        )
+        # Check if frames contain data
+        if not frames:
+            raise ValueError("No audio frames to export. Ensure audio is being recorded.")
 
-        # Write to a temporary file
-        temp_flac = tempfile.NamedTemporaryFile(delete=False, suffix=".flac")
-        audio_segment.export(temp_flac.name, format="flac")
-        return temp_flac.name
+        try:
+            audio_data = b"".join(frames)
+            print(f"Total frames size: {len(audio_data)} bytes")  # Debugging
+
+            audio_segment = AudioSegment(
+                data=audio_data,
+                sample_width=self.audio.get_sample_size(self.FORMAT),
+                frame_rate=self.RATE,
+                channels=self.CHANNELS,
+            )
+            print(f"AudioSegment duration: {audio_segment.duration_seconds} seconds")  # Debugging
+
+            # Ensure the output directory exists
+            os.makedirs(output_dir, exist_ok=True)
+
+            # Define the file name and path
+            file_name = "recorded_audio.flac"
+            file_path = os.path.join(output_dir, file_name)
+
+            # Export the audio to the file
+            audio_segment.export(file_path, format="flac")
+            print(f"Exported to: {file_path}")  # Debugging
+
+            return file_path
+        except Exception as e:
+            print(f"Error exporting audio: {str(e)}")  # Debugging
+            raise
