@@ -130,9 +130,7 @@ class AudioTranscriptionApp(App):
             self.update_status("⚪ Recording failed. Try again.")
         finally:
             self.audio_handler.close_stream()
-            # self.update_activity("Idle...")
-
-
+            self.update_activity("Idle...")
 
     def update_status(self, message: str) -> None:
         """Helper to update the status widget."""
