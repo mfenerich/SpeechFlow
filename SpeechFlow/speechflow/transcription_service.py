@@ -2,10 +2,10 @@ import os
 from google.cloud import speech_v1
 
 class TranscriptionService:
-    def __init__(self, bucket_name="speechmarcel"):
+    def __init__(self, sample_rate=24000, bucket_name="speechmarcel"):
         self.client = None
         self.bucket_name = bucket_name
-        self.rate = 24000
+        self.rate = sample_rate
 
     async def initialize_client(self):
         """Initialize SpeechAsyncClient within the correct event loop."""
@@ -20,7 +20,6 @@ class TranscriptionService:
             raise FileNotFoundError(f"File {file_path} not found.")
 
         try:
-            # Read audio file
             with open(file_path, "rb") as f:
                 audio_content = f.read()
 
@@ -34,12 +33,12 @@ class TranscriptionService:
             # Perform async recognition
             response = await self.client.recognize(config=config, audio=audio)
 
-            # Process response
+            # Extract transcripts
             transcription = "".join(
-                result.alternatives[0].transcript for result in response.results
+                result.alternatives[0].transcript
+                for result in response.results
             )
             return transcription or "No transcription available."
-
         except Exception as e:
             return f"Transcription failed due to an error: {e}"
 

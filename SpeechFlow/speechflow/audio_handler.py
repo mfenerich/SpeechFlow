@@ -1,37 +1,39 @@
-import pyaudio
-import numpy as np
-from pydub import AudioSegment
-import sounddevice as sd
+import os
 import threading
 
-CHUNK_LENGTH_S = 0.05  # 50ms
-SAMPLE_RATE = 24000
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
+import pyaudio
+from pydub import AudioSegment
+
+from .constants import SAMPLE_RATE, FORMAT, CHANNELS, CHUNK_LENGTH_S
 
 class AudioHandler:
     """Handles low-level audio capture and export functionality."""
 
-    def __init__(self):
+    def __init__(
+        self,
+        sample_rate: int = SAMPLE_RATE,
+        chunk_length_s: float = CHUNK_LENGTH_S,
+        fmt=FORMAT,
+        channels: int = CHANNELS,
+    ):
         self.audio = pyaudio.PyAudio()
         self.stream = None
 
         # Audio format constants
-        self.FORMAT = FORMAT
-        self.CHANNELS = CHANNELS
-        self.RATE = SAMPLE_RATE
-        self.CHUNK = int(SAMPLE_RATE * CHUNK_LENGTH_S)
+        self.FORMAT = fmt
+        self.CHANNELS = channels
+        self.RATE = sample_rate
+        self.CHUNK = int(self.RATE * chunk_length_s)
         self.lock = threading.Lock()
-        self.frames = []  # Collected audio frames
 
     def get_audio_devices(self) -> list[tuple[str, str]]:
         """Return a list of available audio devices as (code, display_name) tuples."""
         device_count = self.audio.get_device_count()
-        devices = [
+        # If no devices, return empty list. Handled by main app.
+        return [
             (str(i), f"{self.audio.get_device_info_by_index(i)['name']} ({i})")
             for i in range(device_count)
         ]
-        return devices
 
     def open_stream(self, device_index: int) -> None:
         """Open a PyAudio stream for recording."""
@@ -73,6 +75,6 @@ class AudioHandler:
             frame_rate=self.RATE,
             channels=self.CHANNELS,
         )
-        file_path = f"{output_dir}/recorded_audio.flac"
+        file_path = os.path.join(output_dir, "recorded_audio.flac")
         audio_segment.export(file_path, format="flac")
         return file_path
