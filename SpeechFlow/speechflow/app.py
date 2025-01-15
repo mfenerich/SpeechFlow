@@ -145,7 +145,7 @@ class AudioTranscriptionApp(App):
             result = await self.transcription_service.transcribe(file_path)
             results_widget = self.query_one("#results-log", ResultsBox)
             results_widget.write_result(result)
-            self.update_activity(result or "No transcription available.")
+            self.update_activity("Transcription complete.")
         except Exception as e:
             self.update_activity(f"Error: {str(e)}")
 
