@@ -8,11 +8,11 @@ from textual.events import Key as TextualKeyEvent
 from textual.reactive import reactive
 
 # Import centralized constants
-from .constants import CHUNK_LENGTH_S, SAMPLE_RATE, FORMAT, CHANNELS
+from speechflow.constants import CHUNK_LENGTH_S, SAMPLE_RATE, FORMAT, CHANNELS
 
-from .audio_handler import AudioHandler
-from .transcription_service import TranscriptionService
-from .interface import (
+from speechflow.audio_handler import AudioHandler
+from speechflow.transcription_service import TranscriptionService
+from speechflow.interface import (
     AudioTranscriptionInterface,
     AudioStatusIndicator,
     ActivityIndicator,
@@ -40,7 +40,7 @@ class AudioTranscriptionApp(App):
 
     async def on_load(self) -> None:
         """Load application resources and initialize transcription client."""
-        css_path = Path(__file__).parent / "styles.css"
+        css_path = Path(__file__).parent / "speechflow/styles.css"
         self.stylesheet.read(str(css_path))
         await self.transcription_service.initialize_client()
 
