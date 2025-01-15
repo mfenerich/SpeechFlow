@@ -1,6 +1,7 @@
 import pyaudio
 import tempfile
 from pydub import AudioSegment
+from textual import log
 
 
 class AudioHandler:
@@ -15,6 +16,19 @@ class AudioHandler:
         self.CHANNELS = 1
         self.RATE = 44100
         self.CHUNK = 1024
+
+    def get_audio_devices(self) -> list[tuple[str, str]]:
+        """
+        Return a list of available audio devices as (code, display_name) tuples.
+        The display name includes the device name and its code.
+        """
+        device_count = self.audio.get_device_count()
+        devices = [
+            (str(i), f"{self.audio.get_device_info_by_index(i)['name']} ({i})")
+            for i in range(device_count)
+        ]
+        return devices
+
 
     def select_audio_device(self) -> int:
         """Prompt the user to select an audio device."""

@@ -1,16 +1,22 @@
+from textual import on
+from textual.widgets import Select
 from textual.app import App
 from textual.events import Key as TextualKeyEvent
 from textual.reactive import reactive
 
-from .interface import AudioTranscriptionInterface, AudioStatusIndicator, ActivityIndicator, ResultsBox
-from .audio_handler import AudioHandler
 from .transcription import transcribe_audio
 
+from .audio_handler import AudioHandler
+
+from .interface import AudioTranscriptionInterface, AudioStatusIndicator, ActivityIndicator, ResultsBox
+
 from pathlib import Path
+
 
 class AudioTranscriptionApp(App):
 
     is_recording = reactive(False)
+    device_selected = reactive(False)  # Tracks if a device has been selected
     frames = reactive(list)
 
     def __init__(self, **kwargs):
@@ -23,17 +29,37 @@ class AudioTranscriptionApp(App):
         self.stylesheet.read(str(css_path))
 
     def compose(self):
-        yield AudioTranscriptionInterface()
+        devices = self.audio_handler.get_audio_devices()
+        if not devices:
+            yield AudioStatusIndicator(id="status-indicator", text="No audio devices found")
+        else:
+            yield Select.from_values(devices, id="audio-device-select", prompt="Select an audio device")
+            yield AudioTranscriptionInterface()
 
     async def on_mount(self) -> None:
         """Run tasks when the app is mounted."""
-        # Continue with the rest of your setup
         status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
         activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
 
-        status_widget.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
+        status_widget.update_status("⚪ Please select an audio device to proceed")
         activity_widget.update_activity("Idle...")
 
+    @on(Select.Changed, "#audio-device-select")
+    def on_device_selected(self, event: Select.Changed) -> None:
+        """Handle audio device selection."""
+        selected_option = event.value  # This is a tuple (key, label)
+        self.device_index = int(selected_option[0])  # Extract the key (index) and convert to int
+
+        # Mark the device as selected
+        self.device_selected = True
+
+        # Disable the Select widget
+        select_widget = self.query_one("#audio-device-select", Select)
+        select_widget.disabled = True
+
+        # Update status
+        status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
+        status_widget.update_status("⚪ Press 'K' to start recording ('Q' to quit)")
 
     async def on_key(self, event: TextualKeyEvent) -> None:
         await self.handle_key_press(event.key)
@@ -41,6 +67,10 @@ class AudioTranscriptionApp(App):
     async def handle_key_press(self, key: str) -> None:
         status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
         activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
+
+        if not self.device_selected and key.lower() != "q":
+            status_widget.update_status("⚪ Please select an audio device first.")
+            return
 
         if key.lower() == "q":
             self.exit()
@@ -52,9 +82,6 @@ class AudioTranscriptionApp(App):
                 status_widget.update_status("🔴 Recording... (Press 'K' to stop)")
                 activity_widget.update_activity("Recording")
 
-                # if self.device_index is None:
-                #     self.device_index = self.audio_handler.select_audio_device()
-
                 # Start capturing audio in the background
                 # self.run_worker(self.capture_audio)
             else:
@@ -62,25 +89,53 @@ class AudioTranscriptionApp(App):
                 activity_widget.update_activity("Processing audio...")
                 await self.process_audio()
 
-    async def capture_audio(self) -> None:
-        try:
-            self.audio_handler.open_stream(device_index=self.device_index)
-            while self.is_recording:
-                data = self.audio_handler.read_chunk()
-                self.frames.append(data)
-        finally:
-            self.audio_handler.close_stream()
-
     async def process_audio(self) -> None:
         activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
-        activity_widget.update_activity("Transcribing audio...")
+        results_widget = self.query_one("#results-log", ResultsBox)
 
-        audio_file_path = self.audio_handler.export_frames_to_flac(self.frames)
-        result = transcribe_audio(audio_file_path)
-        self.query_one("#results-log", ResultsBox).write_result(result)
+        if not self.frames:
+            activity_widget.update_activity("No audio recorded to process.")
+            return
 
-        activity_widget.update_activity("Done")
+        activity_widget.update_activity("Preparing audio for transcription...")
+        try:
+            results_widget.clear()
+            audio_file_path = self.audio_handler.export_frames_to_flac(self.frames)
+            activity_widget.update_activity("Processing transcription...")
+            result = transcribe_audio(audio_file_path)
+            results_widget.write_result(result)
+            activity_widget.update_activity("Done")
+        except Exception as e:
+            activity_widget.update_activity(f"Error: {str(e)}")
 
+    # async def capture_audio(self) -> None:
+    #     """Capture audio data while recording is active."""
+    #     status_widget = self.query_one("#status-indicator", AudioStatusIndicator)
+    #     activity_widget = self.query_one("#activity-indicator", ActivityIndicator)
+
+    #     try:
+    #         self.audio_handler.open_stream(device_index=self.device_index)
+    #         activity_widget.update_activity("Recording... Press 'K' to stop.")
+
+    #         while self.is_recording:
+    #             try:
+    #                 # Read a chunk of audio and append it to frames
+    #                 data = self.audio_handler.read_chunk()
+    #                 self.frames.append(data)
+
+    #                 # Optional: Update status widget with recording progress (e.g., duration or size)
+    #                 status_widget.update_status(f"🔴 Recording... {len(self.frames)} chunks captured.")
+    #                 await self.sleep(0.1)  # Yield to the event loop to keep the UI responsive
+    #             except Exception as chunk_error:
+    #                 # Handle individual chunk reading errors without interrupting recording
+    #                 activity_widget.update_activity(f"Error capturing audio chunk: {str(chunk_error)}")
+    #                 break
+
+    #     except Exception as e:
+    #         activity_widget.update_activity(f"Error: {str(e)}")
+    #         status_widget.update_status("⚪ Recording failed. Try again.")
+    #     finally:
+    #         self.audio_handler.close_stream()
 
 if __name__ == "__main__":
     app = AudioTranscriptionApp()
