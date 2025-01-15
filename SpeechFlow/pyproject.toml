@@ -15,6 +15,7 @@ google-cloud-storage = "^2.19.0"
 textual = "^1.0.0"
 numpy = "^2.2.1"
 sounddevice = "^0.5.1"
+grpcio = "1.67.1"
 
 
 [build-system]
