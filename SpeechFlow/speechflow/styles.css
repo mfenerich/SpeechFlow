@@ -1,0 +1,68 @@
+Screen {
+    background: #1a1b26;  /* Dark blue-grey background */
+}
+
+Container {
+    border: double rgb(91, 164, 91);
+}
+
+Horizontal {
+    width: 100%;
+}
+
+#input-container {
+    height: 5;  /* Explicit height for input container */
+    margin: 1 1;
+    padding: 1 2;
+}
+
+Input {
+    width: 80%;
+    height: 3;  /* Explicit height for input */
+}
+
+Button {
+    width: 20%;
+    height: 3;  /* Explicit height for button */
+}
+
+#bottom-pane {
+    width: 100%;
+    height: 82%;  /* Reduced to make room for session display */
+    border: round rgb(205, 133, 63);
+    content-align: center middle;
+}
+
+#status-indicator {
+    height: 3;
+    content-align: center middle;
+    background: #2a2b36;
+    border: solid rgb(91, 164, 91);
+    margin: 1 1;
+}
+
+#activity-indicator {
+    height: 3;
+    content-align: center middle;
+    background: #2a2b36;
+    border: solid rgb(91, 164, 91);
+    margin: 1 1;
+}
+
+#session-display {
+    height: 3;
+    content-align: center middle;
+    background: #2a2b36;
+    border: solid rgb(91, 164, 91);
+    margin: 1 1;
+}
+
+Static {
+    color: white;
+}
+
+RichLog {
+    color: white;
+    border: round rgb(205, 133, 63);
+    padding: 1;
+}

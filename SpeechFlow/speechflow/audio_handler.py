@@ -1,46 +1,36 @@
 import pyaudio
-from google.cloud import speech
+import tempfile
 from pydub import AudioSegment
-from google.cloud import storage
-import openai
+
 
 class AudioHandler:
-    def __init__(self, log_callback):
-        self.is_recording = False
-        self.frames = []
-        self.log = log_callback
+    """Handles low-level audio capture and export functionality."""
+
+    def __init__(self):
         self.audio = pyaudio.PyAudio()
         self.stream = None
 
-        # Initialize Google Speech-to-Text client
-        self.client = speech.SpeechClient()
-        
-        # Audio configuration
+        # Audio format constants
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
         self.CHUNK = 1024
-        self.BUCKET_NAME = "speechmarcel"
-        self.openai_key = "your_openai_key"
 
-        openai.api_key = self.openai_key
+    def select_audio_device(self) -> int:
+        """Prompt the user to select an audio device."""
+        devices = [
+            (i, self.audio.get_device_info_by_index(i)["name"])
+            for i in range(self.audio.get_device_count())
+        ]
+        print("Available audio devices:")
+        for idx, name in devices:
+            print(f"{idx}: {name}")
 
-    def on_press(self, key):
-        if key == keyboard.Key.alt:
-            if not self.is_recording:
-                self.log("Recording started. Hold ALT to record.")
-                self.is_recording = True
-                self.frames = []
+        selected_index = int(input("Select device index: "))
+        return selected_index
 
-    def on_release(self, key):
-        if key == keyboard.Key.alt:
-            if self.is_recording:
-                self.log("Recording stopped. Transcribing...")
-                self.is_recording = False
-                audio_data = b"".join(self.frames)
-                self.transcribe_and_send(audio_data)
-
-    def capture_audio(self, device_index):
+    def open_stream(self, device_index: int) -> None:
+        """Open a PyAudio stream for recording."""
         self.stream = self.audio.open(
             format=self.FORMAT,
             channels=self.CHANNELS,
@@ -50,30 +40,33 @@ class AudioHandler:
             input_device_index=device_index,
         )
 
-        while True:
-            if self.is_recording:
-                data = self.stream.read(self.CHUNK, exception_on_overflow=False)
-                self.frames.append(data)
+    def read_chunk(self) -> bytes:
+        """Read a chunk of audio data."""
+        if self.stream is None:
+            raise RuntimeError("Audio stream is not open.")
+        return self.stream.read(self.CHUNK, exception_on_overflow=False)
 
-    def transcribe_and_send(self, audio_data):
-        # Convert to FLAC and transcribe
+    def close_stream(self) -> None:
+        """Close the PyAudio stream."""
+        if self.stream is not None:
+            self.stream.stop_stream()
+            self.stream.close()
+            self.stream = None
+
+    def export_frames_to_flac(self, frames: list[bytes]) -> str:
+        """
+        Combine audio frames into a pydub AudioSegment and
+        export to a temporary FLAC file. Returns the file path.
+        """
+        audio_data = b"".join(frames)
         audio_segment = AudioSegment(
             data=audio_data,
-            sample_width=pyaudio.PyAudio().get_sample_size(self.FORMAT),
+            sample_width=self.audio.get_sample_size(self.FORMAT),
             frame_rate=self.RATE,
-            channels=self.CHANNELS
+            channels=self.CHANNELS,
         )
 
-        audio_file_path = "temp_audio.flac"
-        audio_segment.export(audio_file_path, format="flac")
-        uri = self.upload_to_gcs(audio_file_path, "temp_audio.flac")
-
-        self.log(f"Uploaded to GCS: {uri}")
-        # Further processing/transcription logic here...
-
-    def upload_to_gcs(self, file_path, destination_blob_name):
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(self.BUCKET_NAME)
-        blob = bucket.blob(destination_blob_name)
-        blob.upload_from_filename(file_path)
-        return f"gs://{self.BUCKET_NAME}/{destination_blob_name}"
+        # Write to a temporary file
+        temp_flac = tempfile.NamedTemporaryFile(delete=False, suffix=".flac")
+        audio_segment.export(temp_flac.name, format="flac")
+        return temp_flac.name
