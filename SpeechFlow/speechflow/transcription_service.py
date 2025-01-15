@@ -1,16 +1,21 @@
-from google.cloud import speech_v1
-from google.cloud.speech_v1 import RecognitionConfig, RecognitionAudio
 import os
+from google.cloud import speech_v1
 
 class TranscriptionService:
     def __init__(self, bucket_name="speechmarcel"):
-        self.client = speech_v1.SpeechAsyncClient()  # Use the async client
+        self.client = None
         self.bucket_name = bucket_name
         self.rate = 24000
-        # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./runtimeenv-c0a1661d4386.json"
+
+    async def initialize_client(self):
+        """Initialize SpeechAsyncClient within the correct event loop."""
+        self.client = speech_v1.SpeechAsyncClient()
 
     async def transcribe(self, file_path: str) -> str:
-        """Asynchronously transcribe audio using Google Speech-to-Text."""
+        """Asynchronously transcribe audio."""
+        if self.client is None:
+            await self.initialize_client()
+
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File {file_path} not found.")
 
@@ -19,14 +24,14 @@ class TranscriptionService:
             with open(file_path, "rb") as f:
                 audio_content = f.read()
 
-            audio = RecognitionAudio(content=audio_content)
-            config = RecognitionConfig(
-                encoding=RecognitionConfig.AudioEncoding.FLAC,
+            audio = speech_v1.RecognitionAudio(content=audio_content)
+            config = speech_v1.RecognitionConfig(
+                encoding=speech_v1.RecognitionConfig.AudioEncoding.FLAC,
                 sample_rate_hertz=self.rate,
                 language_code="en-US",
             )
 
-            # Use the async `recognize` method
+            # Perform async recognition
             response = await self.client.recognize(config=config, audio=audio)
 
             # Process response
@@ -37,8 +42,8 @@ class TranscriptionService:
 
         except Exception as e:
             return f"Transcription failed due to an error: {e}"
-        
+
     async def close(self):
         """Close the gRPC client."""
-        await self.client.close()
-
+        if self.client:
+            await self.client.close()

@@ -29,6 +29,7 @@ class AudioTranscriptionApp(App):
     async def on_load(self) -> None:
         css_path = Path(__file__).parent / "styles.css"
         self.stylesheet.read(str(css_path))
+        await self.transcription_service.initialize_client()
 
     async def on_exit(self) -> None:
         """Ensure graceful shutdown."""
@@ -97,8 +98,7 @@ class AudioTranscriptionApp(App):
         try:
             file_path = self.audio_handler.export_frames_to_flac(self.frames)
             self.update_activity("Processing transcription...")
-            transcription_service = TranscriptionService()
-            result = await transcription_service.transcribe(file_path)
+            result = await self.transcription_service.transcribe(file_path)
             results_widget = self.query_one("#results-log", ResultsBox)
             results_widget.write_result(result)
             self.update_activity(result)
