@@ -1,5 +1,7 @@
 import asyncio
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 from textual import on
 from textual.app import App
@@ -11,6 +13,7 @@ from textual.reactive import reactive
 from speechflow.constants import CHUNK_LENGTH_S, SAMPLE_RATE, FORMAT, CHANNELS
 
 from speechflow.audio_handler import AudioHandler
+from speechflow.chat_service import ChatGPTService
 from speechflow.transcription_service import TranscriptionService
 from speechflow.interface import (
     AudioTranscriptionInterface,
@@ -18,6 +21,8 @@ from speechflow.interface import (
     ActivityIndicator,
     ResultsBox,
 )
+
+load_dotenv()
 
 class AudioTranscriptionApp(App):
     """Main application for audio capture and transcription."""
@@ -35,6 +40,7 @@ class AudioTranscriptionApp(App):
             fmt=FORMAT,
             channels=CHANNELS,
         )
+        self.chat_service = ChatGPTService(os.getenv("CHATGPT_MODEL"))
         self.transcription_service = TranscriptionService(sample_rate=SAMPLE_RATE)
         self.device_index = None
 
@@ -144,7 +150,13 @@ class AudioTranscriptionApp(App):
             self.update_activity("Processing transcription...")
             result = await self.transcription_service.transcribe(file_path)
             results_widget = self.query_one("#results-log", ResultsBox)
-            results_widget.write_result(result)
+
+            full_text = ""  # Initialize a buffer for the full text
+            async for partial_text in self.chat_service.stream_chat_response(result):
+                results_widget.clear()  # Clear the widget before updating
+                full_text += partial_text
+                results_widget.write_result(full_text)  # Update the widget with the entire content
+
             self.update_activity("Transcription complete.")
         except Exception as e:
             self.update_activity(f"Error: {str(e)}")
