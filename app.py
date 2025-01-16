@@ -63,7 +63,7 @@ class AudioTranscriptionApp(App):
 
     async def on_load(self) -> None:
         """Load application resources and initialize transcription client."""
-        css_path = Path(__file__).parent / "speechflow/styles.css"
+        css_path = Path(__file__).parent / "speechflow/core/styles.tcss"
         self.stylesheet.read(str(css_path))
         await self.transcription_service.initialize_client()
 
