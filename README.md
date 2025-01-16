@@ -46,7 +46,7 @@ CHATGPT_API_KEY=your_openai_api_key
 CHATGPT_MODEL=gpt-4o
 
 # Google
-GOOGLE_APPLICATION_CREDENTIALS=
+GOOGLE_APPLICATION_CREDENTIALS=your_gcp_json_path
 ```
 
 Provide appropriate values for each variable.
