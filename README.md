@@ -21,7 +21,7 @@ SpeechFlow is a modular and extensible application for real-time audio transcrip
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/mfenerich/speechflow.git
+git clone https://github.com/mfenerich/SpeechFlow.git
 cd speechflow
 ```
 
