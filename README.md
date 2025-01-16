@@ -146,6 +146,26 @@ class MyNewChatService(ChatServiceInterface):
 
 TODO
 
+---
+
+## Workflow Diagram
+
+```mermaid
+graph TD
+    A[User] -->|Interacts via UI| B[AudioTranscriptionApp]
+    B -->|Captures Audio| C[AudioHandler]
+    C -->|Sends Audio Chunks| D[TranscriptionService]
+    D -->|Transcribes Audio| E[Transcription API - Google or Azure]
+    E -->|Returns Transcription| D
+    D -->|Sends Transcription| F[ChatService]
+    F -->|Queries Chat API| G[Chat API - OpenAI GPT]
+    G -->|Returns Response| F
+    F -->|Sends Response| B
+    B -->|Displays Response| H[User Interface]
+```
+
+---
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
@@ -172,4 +192,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 For questions or support, please contact `marcel@feneri.ch` or open an issue in the repository.
-
