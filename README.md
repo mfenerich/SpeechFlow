@@ -155,7 +155,7 @@ graph TD
     A[User] -->|Interacts via UI| B[AudioTranscriptionApp]
     B -->|Captures Audio| C[AudioHandler]
     C -->|Sends Audio Chunks| D[TranscriptionService]
-    D -->|Transcribes Audio| E[Transcription API - Google or Azure]
+    D -->|Transcribes Audio| E[Transcription API - Google or other service]
     E -->|Returns Transcription| D
     D -->|Sends Transcription| F[ChatService]
     F -->|Queries Chat API| G[Chat API - OpenAI GPT]
