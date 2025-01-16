@@ -48,11 +48,7 @@ class AudioTranscriptionApp(App):
     device_selected = reactive(False)  # Tracks if a device has been selected
     frames = reactive(list)
 
-    def __init__(self,
-            transcription_service: TranscriptionServiceInterface,
-            chat_service: ChatServiceInterface,
-            **kwargs
-        ):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Use audio handler & transcription service with shared constants
         self.audio_handler = AudioHandler(
@@ -212,14 +208,5 @@ class AudioTranscriptionApp(App):
 
 
 if __name__ == "__main__":
-    from speechflow.services.chat.openai_chat import OpenAIChatService
-    from speechflow.services.transcription.google_transcription import GoogleTranscriptionService
-    
-    transcription_service = GoogleTranscriptionService(sample_rate=24000)
-    chat_service = OpenAIChatService(model=os.getenv("CHATGPT_MODEL"))
-
-    app = AudioTranscriptionApp(
-        transcription_service=transcription_service,
-        chat_service=chat_service,
-    )
+    app = AudioTranscriptionApp()
     app.run()
