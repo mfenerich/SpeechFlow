@@ -2,6 +2,7 @@ import asyncio
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import importlib
 
 from textual import on
 from textual.app import App
@@ -24,6 +25,22 @@ from speechflow.core.interface import (
 
 load_dotenv()
 
+def load_class_from_env(env_variable: str):
+    """Dynamically load a class from an environment variable."""
+    class_path = os.getenv(env_variable)
+    if not class_path:
+        raise ValueError(f"Environment variable {env_variable} is not set.")
+    try:
+        module_name, class_name = class_path.rsplit(".", 1)
+        module = importlib.import_module(module_name)
+        return getattr(module, class_name)
+    except (ImportError, AttributeError) as e:
+        raise ImportError(f"Could not load class '{class_path}' from '{env_variable}': {e}")
+
+# Dynamically load services
+TranscriptionServiceClass = load_class_from_env("TRANSCRIPTION_SERVICE")
+ChatServiceClass = load_class_from_env("CHAT_SERVICE")
+
 class AudioTranscriptionApp(App):
     """Main application for audio capture and transcription."""
 
@@ -44,8 +61,8 @@ class AudioTranscriptionApp(App):
             fmt=FORMAT,
             channels=CHANNELS,
         )
-        self.transcription_service = transcription_service
-        self.chat_service = chat_service
+        self.transcription_service = TranscriptionServiceClass(sample_rate=SAMPLE_RATE)
+        self.chat_service = ChatServiceClass(model=os.getenv("CHATGPT_MODEL", "gpt-4o"))
         self.device_index = None
 
     async def on_load(self) -> None:
