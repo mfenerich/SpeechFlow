@@ -10,12 +10,12 @@ from textual.events import Key as TextualKeyEvent
 from textual.reactive import reactive
 
 # Import centralized constants
-from speechflow.constants import CHUNK_LENGTH_S, SAMPLE_RATE, FORMAT, CHANNELS
+from speechflow.core.constants import CHUNK_LENGTH_S, SAMPLE_RATE, FORMAT, CHANNELS
 
-from speechflow.audio_handler import AudioHandler
-from speechflow.chat_service import ChatGPTService
-from speechflow.transcription_service import TranscriptionService
-from speechflow.interface import (
+from speechflow.core.audio_handler import AudioHandler
+from speechflow.services.chat.base import ChatServiceInterface
+from speechflow.services.transcription.base import TranscriptionServiceInterface
+from speechflow.core.interface import (
     AudioTranscriptionInterface,
     AudioStatusIndicator,
     ActivityIndicator,
@@ -31,7 +31,11 @@ class AudioTranscriptionApp(App):
     device_selected = reactive(False)  # Tracks if a device has been selected
     frames = reactive(list)
 
-    def __init__(self, **kwargs):
+    def __init__(self,
+            transcription_service: TranscriptionServiceInterface,
+            chat_service: ChatServiceInterface,
+            **kwargs
+        ):
         super().__init__(**kwargs)
         # Use audio handler & transcription service with shared constants
         self.audio_handler = AudioHandler(
@@ -40,8 +44,8 @@ class AudioTranscriptionApp(App):
             fmt=FORMAT,
             channels=CHANNELS,
         )
-        self.chat_service = ChatGPTService(os.getenv("CHATGPT_MODEL"))
-        self.transcription_service = TranscriptionService(sample_rate=SAMPLE_RATE)
+        self.transcription_service = transcription_service
+        self.chat_service = chat_service
         self.device_index = None
 
     async def on_load(self) -> None:
@@ -191,5 +195,14 @@ class AudioTranscriptionApp(App):
 
 
 if __name__ == "__main__":
-    app = AudioTranscriptionApp()
+    from speechflow.services.chat.openai_chat import OpenAIChatService
+    from speechflow.services.transcription.google_transcription import GoogleTranscriptionService
+    
+    transcription_service = GoogleTranscriptionService(sample_rate=24000)
+    chat_service = OpenAIChatService(model=os.getenv("CHATGPT_MODEL"))
+
+    app = AudioTranscriptionApp(
+        transcription_service=transcription_service,
+        chat_service=chat_service,
+    )
     app.run()

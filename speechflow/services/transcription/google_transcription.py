@@ -1,7 +1,9 @@
 import os
 from google.cloud import speech_v1
 
-class TranscriptionService:
+from speechflow.services.transcription.base import TranscriptionServiceInterface
+
+class GoogleTranscriptionService(TranscriptionServiceInterface):
     def __init__(self, sample_rate=24000, bucket_name="speechmarcel"):
         self.client = None
         self.bucket_name = bucket_name

@@ -2,7 +2,9 @@ import os
 from typing import AsyncGenerator
 from openai import AsyncOpenAI
 
-class ChatGPTService:
+from speechflow.services.chat.base import ChatServiceInterface
+
+class OpenAIChatService(ChatServiceInterface):
     def __init__(self, model: str="gpt-4o"):
         """
         Initializes your ChatGPTService with a hypothetical AsyncOpenAI client.
@@ -10,8 +12,10 @@ class ChatGPTService:
         """
 
         api_key = os.getenv("CHATGPT_API_KEY")
+
+        if not api_key:
+            raise ValueError("CHATGPT_API_KEY environment variable not set")
         
-        # Hypothetical usage of an async OpenAI client:
         self.openai = AsyncOpenAI(api_key=api_key)
         
         self.model = model
