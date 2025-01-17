@@ -15,6 +15,7 @@ google-cloud-storage = "^2.19.0"
 grpcio = "^1.69.0"
 openai = "^1.59.7"
 python-dotenv = "^1.0.1"
+tiktoken = "^0.8.0"
 
 
 [build-system]
