@@ -10,13 +10,13 @@ python = "^3.11"
 pyaudio = "^0.2.14"
 pydub = "^0.25.1"
 textual = "^1.0.0"
-google-cloud-speech = "^2.30.0"
-google-cloud-storage = "^2.19.0"
-grpcio = "^1.69.0"
 openai = "^1.59.7"
 python-dotenv = "^1.0.1"
-tiktoken = "^0.8.0"
+thinkhub = {version = "^0.3.4", extras = ["all"]}
 
+
+[tool.poetry.group.dev.dependencies]
+deptry = "^0.23.0"
 
 [build-system]
 requires = ["poetry-core"]
