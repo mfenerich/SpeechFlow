@@ -49,6 +49,14 @@ Button {
     margin: 1 1;
 }
 
+.service-indicator {
+    height: 3;
+    content-align: center middle;
+    background: #2a2b36;
+    border: solid rgb(91, 164, 91);
+    margin: 1 1;
+}
+
 #session-display {
     height: 3;
     content-align: center middle;

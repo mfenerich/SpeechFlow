@@ -2,11 +2,10 @@ import asyncio
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import importlib
 
 from textual import on
 from textual.app import App
-from textual.widgets import Select
+from textual.widgets import Select, Static
 from textual.events import Key as TextualKeyEvent
 from textual.reactive import reactive
 
@@ -14,8 +13,8 @@ from textual.reactive import reactive
 from speechflow.core.constants import CHUNK_LENGTH_S, SAMPLE_RATE, FORMAT, CHANNELS
 
 from speechflow.core.audio_handler import AudioHandler
-from speechflow.services.chat.base import ChatServiceInterface
-from speechflow.services.transcription.base import TranscriptionServiceInterface
+from thinkhub.chat import get_chat_service
+from thinkhub.transcription import get_transcription_service
 from speechflow.core.interface import (
     AudioTranscriptionInterface,
     AudioStatusIndicator,
@@ -23,23 +22,7 @@ from speechflow.core.interface import (
     ResultsBox,
 )
 
-load_dotenv()
-
-def load_class_from_env(env_variable: str):
-    """Dynamically load a class from an environment variable."""
-    class_path = os.getenv(env_variable)
-    if not class_path:
-        raise ValueError(f"Environment variable {env_variable} is not set.")
-    try:
-        module_name, class_name = class_path.rsplit(".", 1)
-        module = importlib.import_module(module_name)
-        return getattr(module, class_name)
-    except (ImportError, AttributeError) as e:
-        raise ImportError(f"Could not load class '{class_path}' from '{env_variable}': {e}")
-
-# Dynamically load services
-TranscriptionServiceClass = load_class_from_env("TRANSCRIPTION_SERVICE")
-ChatServiceClass = load_class_from_env("CHAT_SERVICE")
+load_dotenv(override=True)
 
 class AudioTranscriptionApp(App):
     """Main application for audio capture and transcription."""
@@ -57,8 +40,8 @@ class AudioTranscriptionApp(App):
             fmt=FORMAT,
             channels=CHANNELS,
         )
-        self.transcription_service = TranscriptionServiceClass(sample_rate=SAMPLE_RATE)
-        self.chat_service = ChatServiceClass(model=os.getenv("CHATGPT_MODEL", "gpt-4o"))
+        self.transcription_service = get_transcription_service(os.getenv("TRANSCRIPTION_SERVICE"))
+        self.chat_service = get_chat_service(os.getenv("CHAT_SERVICE"))
         self.device_index = None
 
     async def on_load(self) -> None:
@@ -84,6 +67,12 @@ class AudioTranscriptionApp(App):
                 devices,
                 id="audio-device-select",
                 prompt="Select an audio device",
+            )
+            # Display the current values of TRANSCRIPTION_SERVICE and CHAT_SERVICE
+            yield Static(
+                f"Transcription Service: {os.getenv('TRANSCRIPTION_SERVICE', 'Not Set')} /// Chat Service: {os.getenv('CHAT_SERVICE', 'Not Set')}",
+                id="service-values",
+                classes="service-indicator",
             )
             yield AudioTranscriptionInterface()
 
@@ -205,7 +194,6 @@ class AudioTranscriptionApp(App):
         self.frames = []
         self.update_status("🔴 Recording... (Press 'K' to stop)")
         self.update_activity("Recording")
-
 
 if __name__ == "__main__":
     app = AudioTranscriptionApp()
