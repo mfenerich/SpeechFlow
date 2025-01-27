@@ -1,15 +1,24 @@
 # SpeechFlow
 
-SpeechFlow is a modular and extensible application for real-time audio transcription and intelligent conversational responses. It leverages transcription services like Google Speech-to-Text and conversational AI models like OpenAI's ChatGPT to provide a seamless experience for speech processing and natural language understanding.
+SpeechFlow is a modular and extensible application for real-time audio transcription and intelligent conversational responses. It leverages transcription services and conversational AI models provided by the `thinkhub` library to provide a seamless experience for speech processing and natural language understanding.
 
 ## Features
 
 - **Real-Time Audio Capture**: Record and process audio in real-time.
-- **Pluggable Transcription Services**: Dynamically switch between transcription providers (e.g., Google Speech-to-Text, Azure, AWS) via configuration.
-- **Intelligent Conversational AI**: Integrates with OpenAI's ChatGPT for generating context-aware responses.
+- **Out-of-the-Box Transcription Services**:
+  - **OpenAI**: Using the `whisper-1` model.
+  - **Google Speech-to-Text**
+- **Out-of-the-Box Chat Services**:
+  - **OpenAI**: Supporting models like `gpt-4` and `gpt-3.5`.
+  - **Anthropic**: Supporting `Claude.ai`.
 - **Extensible Design**: Use the Strategy Pattern to easily add new transcription and chat services.
 - **Configuration-Driven**: Control services and settings dynamically using `.env` files.
 - **Interactive UI**: Built with [Textual](https://textual.textualize.io/) for a rich terminal-based user interface.
+
+### **Image Processing**
+- **OpenAI**: Analyze and process images with AI models (not used in this project).
+
+Learn more about the `thinkhub` library at [https://github.com/mfenerich/thinkhub](https://github.com/mfenerich/thinkhub).
 
 ---
 
@@ -36,14 +45,14 @@ Create a `.env` file in the root directory with the following content:
 
 ```env
 # Transcription service
-TRANSCRIPTION_SERVICE=speechflow.services.transcription.google_transcription.GoogleTranscriptionService
+TRANSCRIPTION_SERVICE=openai or google
 
 # Chat service
-CHAT_SERVICE=speechflow.services.chat.openai_chat.OpenAIChatService
+CHAT_SERVICE=openai or anthropic
 
 # OpenAI settings
 CHATGPT_API_KEY=your_openai_api_key
-CHATGPT_MODEL=gpt-4o
+CHAT_MODEL=gpt-4o or claude-3-5-sonnet-20240620 (or any other model you have access to)
 
 # Google
 GOOGLE_APPLICATION_CREDENTIALS=your_gcp_json_path
@@ -78,13 +87,6 @@ To use a different transcription or chat service, update the `TRANSCRIPTION_SERV
 
 ```plaintext
 speechflow/
-├── services/                          # All service implementations
-│   ├── transcription/                 # Transcription services
-│   │   ├── base.py                    # Abstract base class for transcription services
-│   │   ├── google_transcription.py    # Google implementation
-│   ├── chat/                          # Chat services
-│   │   ├── base.py                    # Abstract base class for chat services
-│   │   └── openai_chat.py             # OpenAI implementation
 ├── core/                              # Core utilities and constants
 │   ├── constants.py                   # Shared constants (e.g., sample rate)
 │   ├── audio_handler.py               # Audio capture and processing
@@ -102,43 +104,9 @@ speechflow/
 
 ## Extending SpeechFlow
 
-SpeechFlow is designed to be modular and extensible. You can easily add new transcription or chat services by following these steps:
+SpeechFlow is designed to be modular and extensible. You can easily add new transcription or chat services by utilizing the `thinkhub` library.
 
-### Add a New Transcription Service
-1. Create a new file under `speechflow/services/transcription/`.
-2. Implement the `TranscriptionServiceInterface` from `base.py`.
-3. Register the new service in your `.env` file.
-
-Example:
-```python
-# my_new_transcription.py
-from speechflow.services.transcription.base import TranscriptionServiceInterface
-
-class MyNewTranscriptionService(TranscriptionServiceInterface):
-    async def initialize_client(self):
-        pass  # Initialization logic
-
-    async def transcribe(self, file_path: str) -> str:
-        pass  # Transcription logic
-
-    async def close(self):
-        pass  # Cleanup logic
-```
-
-### Add a New Chat Service
-1. Create a new file under `speechflow/services/chat/`.
-2. Implement the `ChatServiceInterface` from `base.py`.
-3. Register the new service in your `.env` file.
-
-Example:
-```python
-# my_new_chat_service.py
-from speechflow.services.chat.base import ChatServiceInterface
-
-class MyNewChatService(ChatServiceInterface):
-    async def stream_chat_response(self, transcription: str, system_prompt: str):
-        pass  # Chat response logic
-```
+Learn more about extending services in the [thinkhub repository](https://github.com/mfenerich/thinkhub).
 
 ---
 
@@ -185,6 +153,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 - [Textual](https://textual.textualize.io/) for the interactive UI framework.
+- [thinkhub](https://github.com/mfenerich/thinkhub) for providing transcription and chat services.
 - [Google Cloud Speech-to-Text](https://cloud.google.com/speech-to-text) for transcription services.
 - [OpenAI](https://openai.com/) for conversational AI.
 
