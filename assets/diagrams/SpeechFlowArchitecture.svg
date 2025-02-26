@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620">
+  <!-- Background -->
+  <rect width="823.22" height="700.749" fill="#f8f9fa" rx="10" ry="10" x="-43.313" y="-93.122"/>
+  
+  <!-- Title -->
+  <text x="380.061" y="-56.756" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#212529">
+    SpeechFlow Architecture
+  </text>
+  
+  <!-- Main Application Container -->
+  <g transform="matrix(1, 0, 0, 1, 14.132879, 57.768215)">
+    <rect x="6.687" width="700" height="510" fill="#f1f3f5" stroke="#adb5bd" stroke-width="2" rx="10" ry="10" y="-33.122"/>
+  </g>
+  <text x="370.82" y="44.646" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#495057">
+    app.py
+  </text>
+  
+  <!-- Core Module Container -->
+  <rect x="70.82" y="64.646" width="600" height="150" fill="#e7f5fe" stroke="#4dabf7" stroke-width="2" rx="8" ry="8"/>
+  <text x="370.82" y="84.646" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#1971c2">
+    Core Module
+  </text>
+  
+  <!-- Constants Component -->
+  <rect x="90.82" y="104.646" width="160" height="80" fill="#fff" stroke="#4dabf7" stroke-width="2" rx="5" ry="5"/>
+  <text x="170.82" y="129.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2">
+    constants.py
+  </text>
+  <text x="170.82" y="149.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Sample rates
+  </text>
+  <text x="170.82" y="169.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Buffer sizes
+  </text>
+  
+  <!-- Audio Handler Component -->
+  <rect x="290.82" y="104.646" width="160" height="80" fill="#fff" stroke="#4dabf7" stroke-width="2" rx="5" ry="5"/>
+  <text x="370.82" y="129.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2">
+    audio_handler.py
+  </text>
+  <text x="370.82" y="149.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Stream capture
+  </text>
+  <text x="370.82" y="169.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Audio processing
+  </text>
+  
+  <!-- Interface Component -->
+  <rect x="490.82" y="104.646" width="160" height="80" fill="#fff" stroke="#4dabf7" stroke-width="2" rx="5" ry="5"/>
+  <text x="570.82" y="129.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2">
+    interface.py
+  </text>
+  <text x="570.82" y="149.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - UI components
+  </text>
+  <text x="570.82" y="169.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Event handlers
+  </text>
+  
+  <!-- Transcription Services Container -->
+  <rect x="70.82" y="244.646" width="280" height="240" fill="#fff3bf" stroke="#fcc419" stroke-width="2" rx="8" ry="8"/>
+  <text x="210.82" y="264.646" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#e67700">
+    Transcription Services
+  </text>
+  
+  <!-- OpenAI Transcription Component -->
+  <rect x="90.82" y="294.646" width="240" height="80" fill="#fff" stroke="#fcc419" stroke-width="2" rx="5" ry="5"/>
+  <text x="210.82" y="319.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e67700">
+    OpenAI Whisper Service
+  </text>
+  <text x="210.82" y="339.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - REST API integration
+  </text>
+  <text x="210.82" y="354.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Streaming transcription
+  </text>
+  
+  <!-- Google Transcription Component -->
+  <rect x="90.82" y="384.646" width="240" height="80" fill="#fff" stroke="#fcc419" stroke-width="2" rx="5" ry="5"/>
+  <text x="210.82" y="409.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e67700">
+    Google Speech-to-Text Service
+  </text>
+  <text x="210.82" y="429.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Google Cloud integration
+  </text>
+  <text x="210.82" y="444.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Real-time recognition
+  </text>
+  
+  <!-- Chat Services Container -->
+  <rect x="390.82" y="244.646" width="280" height="240" fill="#d3f9d8" stroke="#40c057" stroke-width="2" rx="8" ry="8"/>
+  <text x="530.82" y="264.646" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#2b8a3e">
+    Chat Services
+  </text>
+  
+  <!-- OpenAI Chat Component -->
+  <rect x="410.82" y="294.646" width="240" height="80" fill="#fff" stroke="#40c057" stroke-width="2" rx="5" ry="5"/>
+  <text x="530.82" y="319.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#2b8a3e">
+    OpenAI GPT-4/3.5 Service
+  </text>
+  <text x="530.82" y="339.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Context management
+  </text>
+  <text x="530.82" y="354.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Response generation
+  </text>
+  
+  <!-- Anthropic Chat Component -->
+  <rect x="410.82" y="384.646" width="240" height="80" fill="#fff" stroke="#40c057" stroke-width="2" rx="5" ry="5"/>
+  <text x="530.82" y="409.646" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#2b8a3e">
+    Anthropic Claude Service
+  </text>
+  <text x="530.82" y="429.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Context-aware conversations
+  </text>
+  <text x="530.82" y="444.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    - Natural language processing
+  </text>
+  
+  <!-- Configuration Container -->
+  <rect x="70.82" y="504.646" width="600" height="85.036" fill="#f8f0fc" stroke="#ae3ec9" stroke-width="2" rx="8" ry="8"/>
+  <text x="370.82" y="524.646" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#9c36b5">
+    .env Configuration
+  </text>
+  <text x="370.82" y="544.646" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057">
+    Service selection and API configuration
+  </text>
+  
+  <!-- Data Flow Arrows -->
+  <!-- From Constants to Audio Handler -->
+  <line x1="250.82" y1="144.646" x2="290.82" y2="144.646" stroke="#495057" stroke-width="2" stroke-dasharray="4,2"/>
+  <polygon points="290.82 144.646 280.82 139.646 280.82 149.646" fill="#495057"/>
+  
+  <!-- From Audio Handler to Interface -->
+  <line x1="450.82" y1="144.646" x2="490.82" y2="144.646" stroke="#495057" stroke-width="2" stroke-dasharray="4,2"/>
+  <polygon points="490.82 144.646 480.82 139.646 480.82 149.646" fill="#495057"/>
+  
+  <!-- From Audio Handler to Transcription Services -->
+  <path d="M 370.82 184.646 L 370.82 244.646" stroke="#495057" stroke-width="2"/>
+  <polygon points="370.82 244.646 365.82 234.646 375.82 234.646" fill="#495057"/>
+  
+  <!-- From Transcription to Chat -->
+  <line x1="350.82" y1="354.646" x2="410.82" y2="354.646" stroke="#495057" stroke-width="2"/>
+  <polygon points="410.82 354.646 400.82 349.646 400.82 359.646" fill="#495057"/>
+  
+  <!-- From Chat to Interface -->
+  <path d="M 530.82 294.646 C 530.82 224.646 570.82 224.646 570.82 184.646" stroke="#495057" stroke-width="2"/>
+  <polygon points="570.82 184.646 565.82 194.646 575.82 194.646" fill="#495057"/>
+  
+  <!-- Configuration to Services -->
+  <line x1="210.82" y1="504.646" x2="210.82" y2="484.646" stroke="#495057" stroke-width="2" stroke-dasharray="6,3"/>
+  <polygon points="210.82 484.646 205.82 494.646 215.82 494.646" fill="#495057"/>
+  
+  <line x1="530.82" y1="504.647" x2="530.82" y2="484.647" stroke="#495057" stroke-width="2" stroke-dasharray="6,3"/>
+  <polygon points="530.82 484.646 525.82 494.646 535.82 494.646" fill="#495057"/>
+  
+  <!-- Strategy Pattern Labels -->
+  <rect x="90.82" y="224.646" width="120" height="25" fill="#4dabf7" rx="12.5" ry="12.5" opacity="0.7"/>
+  <text x="150.82" y="241.646" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#fff">
+    Strategy Pattern
+  </text>
+  
+  <rect x="410.82" y="224.646" width="120" height="25" fill="#4dabf7" rx="12.5" ry="12.5" opacity="0.7"/>
+  <text x="470.82" y="241.646" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#fff">
+    Strategy Pattern
+  </text>
+  
+  <!-- Legend -->
+  <rect x="563.692" y="514.773" width="20" height="10" fill="#e7f5fe" stroke="#4dabf7" stroke-width="1"/>
+  <text x="588.692" y="522.773" font-family="Arial" font-size="10" fill="#495057">Core</text>
+  
+  <rect x="563.692" y="529.773" width="20" height="10" fill="#fff3bf" stroke="#fcc419" stroke-width="1"/>
+  <text x="589.25" y="537.773" font-family="Arial" font-size="10" fill="#495057">Transcription</text>
+  
+  <rect x="563.692" y="544.773" width="20" height="10" fill="#d3f9d8" stroke="#40c057" stroke-width="1"/>
+  <text x="588.692" y="552.773" font-family="Arial" font-size="10" fill="#495057">Chat</text>
+  
+  <line x1="563.692" y1="559.773" x2="583.691" y2="559.773" stroke="#495057" stroke-width="2"/>
+  <text x="589.219" y="564.112" font-family="Arial" font-size="10" fill="#495057">Data Flow</text>
+  
+  <line x1="563.692" y1="574.774" x2="583.691" y2="574.774" stroke="#495057" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="587.874" y="578.321" font-family="Arial" font-size="10" fill="#495057">Configuration</text>
+  
+  <!-- External Dependencies -->
+  <g>
+    <rect x="52.15" y="-33.139" width="120" height="30" fill="#e9ecef" stroke="#adb5bd" stroke-width="1" rx="15" ry="15"/>
+    <text x="112.15" y="-13.139" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">PyAudio</text>
+    
+    <rect x="182.15" y="-33.139" width="120" height="30" fill="#e9ecef" stroke="#adb5bd" stroke-width="1" rx="15" ry="15"/>
+    <text x="242.15" y="-13.139" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">Textual</text>
+    
+    <rect x="307.535" y="-32.745" width="120" height="30" fill="#e9ecef" stroke="#adb5bd" stroke-width="1" rx="15" ry="15"/>
+    <text x="372.15" y="-13.139" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">OpenAI API</text>
+    
+    <rect x="442.15" y="-33.139" width="120" height="30" fill="#e9ecef" stroke="#adb5bd" stroke-width="1" rx="15" ry="15"/>
+    <text x="502.15" y="-13.139" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">Google Cloud</text>
+    
+    <rect x="572.15" y="-33.139" width="120" height="30" fill="#e9ecef" stroke="#adb5bd" stroke-width="1" rx="15" ry="15"/>
+    <text x="632.15" y="-13.139" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">Anthropic API</text>
+  </g>
+</svg>
