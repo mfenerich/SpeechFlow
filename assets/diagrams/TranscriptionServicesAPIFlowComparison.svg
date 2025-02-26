@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#f8f9fa" rx="10" ry="10"></rect>
+  <text x="450" y="40" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#212529" style="white-space: pre;">
+    Transcription Services: API Flow Comparison
+  </text>
+  <line x1="450" y1="70" x2="450" y2="570" stroke="#dee2e6" stroke-width="2" stroke-dasharray="10,5"></line>
+  <rect x="125" y="70" width="200" height="40" rx="5" ry="5" fill="#fff3bf" stroke="#fcc419" stroke-width="2"></rect>
+  <text x="225" y="95" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#e67700" style="white-space: pre;">
+    OpenAI Whisper Service
+  </text>
+  <rect x="556.364" y="70" width="247.235" height="38.891" rx="5" ry="5" fill="#d0ebff" stroke="#339af0" stroke-width="2" style=""></rect>
+  <text x="675" y="95" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#1971c2" style="white-space: pre;">
+    Google Speech-to-Text Service
+  </text>
+  <rect x="400" y="130" width="111.398" height="51.752" rx="5" ry="5" fill="#e7f5ff" stroke="#4dabf7" stroke-width="2" style=""></rect>
+  <text x="450" y="155" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1864ab" style="white-space: pre;">
+    Audio Source
+  </text>
+  <text x="450" y="173" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    16kHz PCM Audio
+  </text>
+  <rect x="400" y="210" width="113.349" height="50.228" rx="5" ry="5" fill="#e7f5ff" stroke="#4dabf7" stroke-width="2" style=""></rect>
+  <text x="450" y="235" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1864ab" style="white-space: pre;">
+    Audio Chunker
+  </text>
+  <text x="450" y="253" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    1024 sample chunks
+  </text>
+  <rect x="125" y="290" width="200" height="50" rx="5" ry="5" fill="#fff3bf" stroke="#fcc419" stroke-width="2"></rect>
+  <text x="225" y="315" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e67700" style="white-space: pre;">
+    Base64 Encoding
+  </text>
+  <text x="225" y="333" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    Convert audio to base64 string
+  </text>
+  <rect x="575" y="290" width="200" height="50" rx="5" ry="5" fill="#d0ebff" stroke="#339af0" stroke-width="2"></rect>
+  <text x="675" y="315" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2" style="white-space: pre;">
+    LinearPCM Conversion
+  </text>
+  <text x="675" y="333" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    Format for streaming recognition
+  </text>
+  <rect x="125" y="370" width="200" height="60" rx="5" ry="5" fill="#fff3bf" stroke="#fcc419" stroke-width="2"></rect>
+  <text x="225" y="395" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e67700" style="white-space: pre;">
+    REST API Request
+  </text>
+  <text x="225" y="413" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    POST /v1/audio/transcriptions
+  </text>
+  <text x="225" y="428" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    model=whisper-1
+  </text>
+  <rect x="575" y="370" width="200" height="60" rx="5" ry="5" fill="#d0ebff" stroke="#339af0" stroke-width="2"></rect>
+  <text x="675" y="395" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2" style="white-space: pre;">
+    gRPC Streaming Request
+  </text>
+  <text x="675" y="413" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    StreamingRecognize()
+  </text>
+  <text x="675" y="428" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    BiDi streaming RPC
+  </text>
+  <path d="M 229.531 469.236 C 209.531 469.236 209.531 459.236 209.531 449.236 C 209.531 439.236 204.531 439.236 194.531 439.236 C 184.531 439.236 179.531 439.236 179.531 449.236 C 179.531 439.236 174.531 439.236 169.531 444.236 C 164.531 449.236 159.531 454.236 159.531 459.236 C 159.531 469.236 169.531 479.236 179.531 479.236 C 179.531 484.236 184.531 489.236 194.531 489.236 C 204.531 489.236 214.531 484.236 219.531 479.236 C 224.531 484.236 234.531 489.236 239.531 484.236 C 244.531 479.236 249.531 474.236 249.531 469.236 C 264.531 469.236 274.531 459.236 274.531 449.236 C 274.531 439.236 259.531 439.236 249.531 444.236 C 249.531 434.236 239.531 429.236 229.531 429.236 C 219.531 429.236 209.531 439.236 209.531 449.236 C 219.531 449.236 229.531 449.236 229.531 469.236" fill="#fff9db" stroke="#fcc419" stroke-width="2"></path>
+  <text x="221.343" y="463.465" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e67700" style="white-space: pre; font-size: 14px;">
+    OpenAI Cloud
+  </text>
+  <path d="M 683.629 509.339 C 663.629 469.339 663.629 459.339 663.629 449.339 C 663.629 439.339 658.629 439.339 648.629 439.339 C 638.629 439.339 633.629 439.339 633.629 449.339 C 633.629 439.339 628.629 439.339 623.629 444.339 C 618.629 449.339 613.629 454.339 613.629 459.339 C 613.629 469.339 623.629 479.339 633.629 479.339 C 633.629 484.339 638.629 489.339 648.629 489.339 C 658.629 489.339 668.629 484.339 673.629 479.339 C 678.629 484.339 688.629 489.339 693.629 484.339 C 698.629 479.339 703.629 474.339 703.629 469.339 C 718.629 469.339 728.629 459.339 728.629 449.339 C 728.629 439.339 713.629 439.339 703.629 444.339 C 703.629 434.339 693.629 429.339 683.629 429.339 C 673.629 429.339 663.629 439.339 663.629 449.339 C 673.629 449.339 683.629 449.339 683.629 469.339" fill="#e7f5ff" stroke="#339af0" stroke-width="2"></path>
+  <text x="669.538" y="463.508" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2" style="white-space: pre; font-size: 14px;">
+    Google Cloud
+  </text>
+  <rect x="125" y="510" width="200" height="60" rx="5" ry="5" fill="#fff3bf" stroke="#fcc419" stroke-width="2"></rect>
+  <text x="225" y="535" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#e67700" style="white-space: pre;">
+    JSON Response
+  </text>
+  <text x="225" y="553" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    {"text": "transcribed content"}
+  </text>
+  <text x="225" y="568" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    Single response per request
+  </text>
+  <rect x="575" y="510" width="200" height="60" rx="5" ry="5" fill="#d0ebff" stroke="#339af0" stroke-width="2"></rect>
+  <text x="675" y="535" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1971c2" style="white-space: pre;">
+    Stream of Results
+  </text>
+  <text x="675" y="553" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    StreamingRecognitionResult
+  </text>
+  <text x="675" y="568" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    Interim + final results
+  </text>
+  <line x1="450" y1="180" x2="450" y2="210" stroke="#1864ab" stroke-width="2"></line>
+  <polygon points="450,210 445,200 455,200" fill="#1864ab"></polygon>
+  <path d="M 400,235 C 350,235 350,235 350,260 C 350,285 325,290 225,290" stroke="#e67700" stroke-width="2" fill="none"></path>
+  <polygon points="225,290 235,285 235,295" fill="#e67700"></polygon>
+  <path d="M 500,235 C 550,235 550,235 550,260 C 550,285 575,290 675,290" stroke="#1971c2" stroke-width="2" fill="none"></path>
+  <polygon points="675,290 665,285 665,295" fill="#1971c2"></polygon>
+  <line x1="225" y1="340" x2="225" y2="370" stroke="#e67700" stroke-width="2"></line>
+  <polygon points="225,370 220,360 230,360" fill="#e67700"></polygon>
+  <line x1="225" y1="430" x2="225" y2="440" stroke="#e67700" stroke-width="2"></line>
+  <polygon points="225,440 220,430 230,430" fill="#e67700"></polygon>
+  <line x1="225" y1="480" x2="225" y2="510" stroke="#e67700" stroke-width="2"></line>
+  <polygon points="225,510 220,500 230,500" fill="#e67700"></polygon>
+  <line x1="675" y1="340" x2="675" y2="370" stroke="#1971c2" stroke-width="2"></line>
+  <polygon points="675,370 670,360 680,360" fill="#1971c2"></polygon>
+  <line x1="675" y1="430" x2="675" y2="440" stroke="#1971c2" stroke-width="2"></line>
+  <polygon points="675,440 670,430 680,430" fill="#1971c2"></polygon>
+  <line x1="675" y1="480" x2="675" y2="510" stroke="#1971c2" stroke-width="2"></line>
+  <polygon points="675,510 670,500 680,500" fill="#1971c2"></polygon>
+  <rect x="340" y="370" width="220" height="30" rx="15" ry="15" fill="#f1f3f5" stroke="#adb5bd" stroke-width="1"></rect>
+  <text x="450" y="390" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    REST API vs. Bidirectional gRPC
+  </text>
+  <rect x="340" y="510" width="220" height="30" rx="15" ry="15" fill="#f1f3f5" stroke="#adb5bd" stroke-width="1"></rect>
+  <text x="450" y="530" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057" style="white-space: pre;">
+    Batch Response vs. Streaming Results
+  </text>
+  <rect x="75" y="290" width="45" height="25" rx="5" ry="5" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="97.5" y="308" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">15KB+</text>
+  <rect x="75" y="370" width="45" height="25" rx="5" ry="5" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="97.5" y="388" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">~300ms</text>
+  <rect x="75" y="510" width="45" height="25" rx="5" ry="5" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="97.5" y="528" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre;">~95%</text>
+  <rect x="779.862" y="296.746" width="45" height="25" rx="5" ry="5" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="801.988" y="314.168" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre; font-size: 12px;">32KB</text>
+  <rect x="779.894" y="370.421" width="45" height="25" rx="5" ry="5" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="803.058" y="386.427" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre; font-size: 12px;">~150ms</text>
+  <rect x="778.821" y="515.925" width="45" height="25" rx="5" ry="5" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="797.051" y="532.202" font-family="Arial" font-size="12" text-anchor="middle" fill="#495057" style="white-space: pre; font-size: 12px;">~93%</text>
+  <rect x="75" y="580" width="15" height="15" fill="#fff3bf" stroke="#fcc419" stroke-width="2"></rect>
+  <text x="100" y="592" font-family="Arial" font-size="12" text-anchor="start" fill="#495057" style="white-space: pre;">OpenAI Service</text>
+  <rect x="200" y="580" width="15" height="15" fill="#d0ebff" stroke="#339af0" stroke-width="2"></rect>
+  <text x="225" y="592" font-family="Arial" font-size="12" text-anchor="start" fill="#495057" style="white-space: pre;">Google Service</text>
+  <rect x="350" y="580" width="15" height="15" fill="#e7f5ff" stroke="#4dabf7" stroke-width="2"></rect>
+  <text x="375" y="592" font-family="Arial" font-size="12" text-anchor="start" fill="#495057" style="white-space: pre;">Common Components</text>
+  <rect x="525" y="580" width="15" height="15" fill="#fff" stroke="#868e96" stroke-width="1"></rect>
+  <text x="550" y="592" font-family="Arial" font-size="12" text-anchor="start" fill="#495057" style="white-space: pre;">Performance Metrics</text>
+  <rect x="700" y="580" width="15" height="15" fill="#f1f3f5" stroke="#adb5bd" stroke-width="1"></rect>
+  <text x="725" y="592" font-family="Arial" font-size="12" text-anchor="start" fill="#495057" style="white-space: pre;">Key Differences</text>
+</svg>
